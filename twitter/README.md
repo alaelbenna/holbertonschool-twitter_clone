@@ -20,9 +20,9 @@
 ### PostWidget: A customizable Flutter widget displaying a stylized social media post, including user avatar, username, verified badge, post content, and interaction icons, with dynamic data injection, encapsulating a post's visual representation.
 
 
-![Screenshot 5](6.png)
-![Screenshot 5](7.png)
-![Screenshot 5](8.png)
-![Screenshot 5](9.png)
+![Screenshot 6](6.png)
+![Screenshot 7](7.png)
+![Screenshot 8](8.png)
+![Screenshot 9](9.png)
 
 ### Made by [alaelbenna](https://github.com/alaelbenna) for [Holberton School](https://www.holbertonschool.com/)
