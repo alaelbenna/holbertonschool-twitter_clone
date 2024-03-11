@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:twitter/models/user.dart';
+import 'package:twitter/providers/auth_state.dart';
+import 'package:twitter/screens/profile_screen.dart';
 
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({super.key});
@@ -10,9 +14,9 @@ class SideBarMenu extends StatefulWidget {
 class _SideBarMenuState extends State<SideBarMenu> {
   @override
   Widget build(BuildContext context) {
+    final Auth auth = Provider.of<Auth>(context);
+
     return Drawer(
-/*       width: 89,
-      elevation: 7, */
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
@@ -28,7 +32,9 @@ class _SideBarMenuState extends State<SideBarMenu> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: 30,
+                    padding: const EdgeInsets.only(top: 8),
+                    width: 50,
+                    height: 50,
                     child: Image.asset(('asstes/logo/logo.png')),
                   ),
                   const SizedBox(height: 10),
@@ -37,7 +43,22 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     style: TextStyle(color: Colors.grey, fontSize: 20),
                   ),
                   const SizedBox(height: 10),
-                  const Text('0 Followers   0 Following'),
+                  FutureBuilder<User>(
+                    future: auth.getCurrentUserModel(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error:');
+                      } else if (snapshot.hasData) {
+                        final currentUser = snapshot.data!;
+                        return Text(
+                            '${currentUser.followers} Followers   ${currentUser.following} Following');
+                      } else {
+                        return Text('Loading...');
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
@@ -45,7 +66,14 @@ class _SideBarMenuState extends State<SideBarMenu> {
           ListTile(
             leading: const Icon(Icons.account_circle),
             title: const Text('Profile'),
-            onTap: () => {},
+            onTap: () => {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileScreen(
+                        )),
+              ),
+            },
           ),
           ListTile(
             leading: const Icon(Icons.list),

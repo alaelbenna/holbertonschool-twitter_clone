@@ -1,22 +1,27 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class User {
   final String key;
-  final String userID;
+  String? userID = Uuid().v4();
   final String email;
-
   final String userName;
-  final String displayName;
+  late final String displayName;
   final String imageUrl;
   final int following;
   final int followers;
   final List<String> followersList;
   final List<String> followingList;
+  late final String bio;
+  final String coverImgUrl;
 
   User({
     this.key = "",
     this.userName = "",
-    this.userID = "",
+    this.userID,
     this.email = "",
     this.displayName = "",
     this.imageUrl = "",
@@ -24,6 +29,8 @@ class User {
     this.followers = 0,
     this.followingList = const [],
     this.followersList = const [],
+    this.bio = "No bio available",
+    this.coverImgUrl = "",
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -54,5 +61,18 @@ class User {
     data['followersList'] = this.followersList;
     data['followingList'] = this.followingList;
     return data;
+  }
+
+  static Future<User> getCurrentUser() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      return User(
+        userID: currentUser.uid,
+        // Populate other user properties here if needed
+      );
+    }
+
+    return User();
   }
 }
